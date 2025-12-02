@@ -1,0 +1,29 @@
+[project]
+name = "env-cli"
+version = "0.1.0"
+description = "env-cli"
+authors = [
+    {name = "Raanan Denis", email = "raanand@gmail.com"},
+]
+dependencies = [
+    "click>=8.3.1",
+    "boto3",
+    "pydantic>=2.12.5",
+    "pyyaml>=6.0.3",
+]
+requires-python = ">=3.12"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project.scripts]
+# Defines a command line tool called 's3-manager'.
+# The value points to the module path and the function to execute.
+# Format: <cli_name> = "<module>:<function>"
+env-cli = "env_cli.main:cli"
+
+[tool.pdm]
+distribution = true
