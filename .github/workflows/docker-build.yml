@@ -1,0 +1,42 @@
+name: Docker Build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write        # REQUIRED for OIDC
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::027574771246:role/repos_config-aryon-app
+          aws-region: eu-central-1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Get image tag
+        id: tag
+        run: |
+          BRANCH="${GITHUB_REF_NAME}"
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            BRANCH="${GITHUB_HEAD_REF}"
+          fi
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+          echo "TAG=$BRANCH-$(git describe --tags --dirty --always)" >> $GITHUB_OUTPUT;
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/env-cli:main

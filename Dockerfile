@@ -9,4 +9,5 @@ ADD README.md .
 RUN pdm sync
 ENV PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/app/.venv/bin
 RUN env-cli --help
+USER app
 ENTRYPOINT [ "/app/.venv/bin/env-cli" ]
