@@ -14,7 +14,7 @@ class EnvsManager():
         self._bucket = S3BucketManager("aryon-envs-bucket")
         self._envs_prefix = "envs/"
     def _get_token(self):
-        github_token = os.environ.get("GITHUB_PAT")
+        github_token = os.environ.get("ENV_CLI_GITHUB_SECRET")
         if not github_token:
             raise ValueError("GITHUB_PAT environment variable not set.")
         return github_token
