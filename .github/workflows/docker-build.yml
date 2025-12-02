@@ -1,4 +1,4 @@
-name: Docker Build
+name:  Build
 
 on:
   push:
@@ -12,7 +12,10 @@ jobs:
       contents: read
     steps:
       - name: Checkout code
+        
         uses: actions/checkout@v4
+        with: 
+          fetch-depth: 0
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -29,6 +32,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with: 
+          fetch-depth: 0
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
