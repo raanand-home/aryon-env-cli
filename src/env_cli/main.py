@@ -14,6 +14,7 @@ class EnvsManager():
     def push_env_data(self,config:EnvConfig):
         config_yaml = yaml.safe_dump(config.model_dump())
         self._bucket.put_object_data(config.name,config_yaml)
+    
 
 _env = EnvsManager()
 @click.group()
@@ -33,7 +34,7 @@ def new_env(git_repo,name):
         click.echo(f"Environment '{name}' already exists.")
         return -1
     _env.push_env_data(EnvConfig(name=name, git_repo=git_repo))
-    
+
 
 
 if __name__ == '__main__':
