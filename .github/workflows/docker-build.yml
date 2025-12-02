@@ -21,7 +21,9 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::027574771246:role/repos_config-aryon-env-cli
           aws-region: eu-central-1
-      - run: | 
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@v4
+      - run: |
           make publish
 
   build:
