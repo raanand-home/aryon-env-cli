@@ -5,6 +5,22 @@ on:
     branches: [ main ]
 
 jobs:
+  publish-python-package:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write        # REQUIRED for OIDC
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::027574771246:role/repos_config-aryon-env-cli
+          aws-region: eu-central-1
+      - run: | 
+          make publish
+
   build:
     runs-on: ubuntu-latest
     permissions:
