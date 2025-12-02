@@ -12,7 +12,7 @@ dependencies = [
     "pyyaml>=6.0.3",
     "pygithub>=2.8.1",
 ]
-requires-python = "3.13.7"
+requires-python = ">=3.13"
 readme = "README.md"
 license = {text = "MIT"}
 
@@ -22,10 +22,13 @@ build-backend = "pdm.backend"
 
 [project.scripts]
 env-cli = "env_cli.main:cli"
+
+[tool.pdm]
 [tool.pdm.publish]
 repository = "codeartifact"
 [tool.pdm.repositories]
-[[tool.pdm.repositories.codeartifact]]
+[[tool.pdm.repositories.source]]
+name = "codeartifact"
 url = "https://aryon-027574771246.d.codeartifact.eu-central-1.amazonaws.com/pypi/private/simple/"
 username = "aws"
 password = "${CODEARTIFACT_AUTH_TOKEN}"
