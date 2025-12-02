@@ -10,6 +10,7 @@ dependencies = [
     "boto3",
     "pydantic>=2.12.5",
     "pyyaml>=6.0.3",
+    "pygithub>=2.8.1",
 ]
 requires-python = ">=3.12"
 readme = "README.md"
