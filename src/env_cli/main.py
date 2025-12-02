@@ -12,7 +12,7 @@ from .github_wrapper import trigger_github_workflow
 class EnvsManager():
     def __init__(self):
         self._bucket = S3BucketManager("aryon-envs-bucket")
-        
+        self._envs_prefix = "envs/"
     def _get_token(self):
         github_token = os.environ.get("GITHUB_PAT")
         if not github_token:
@@ -20,15 +20,15 @@ class EnvsManager():
         return github_token
     
     def list_envs(self):
-        for env in self._bucket.list():
-            yield env
+        for env in self._bucket.list(self._envs_prefix):
+            yield env.replace(self._envs_prefix,"")
 
     def push_env_data(self,config:EnvConfig):
         config_yaml = yaml.safe_dump(config.model_dump())
-        self._bucket.put_object_data(config.name,config_yaml)
+        self._bucket.put_object_data(f"{self._envs_prefix}{config.name}",config_yaml)
 
     def get_env(self, name):
-        yaml_content = self._bucket.get_object_data(name)
+        yaml_content = self._bucket.get_object_data(f"{self._envs_prefix}{name}")
         return EnvConfig(**yaml.safe_load(yaml_content))
 
     def apply(self,name):
@@ -81,6 +81,16 @@ def checkout_ref(name):
 @click.argument("name")
 def manual_apply(name):
     _env.apply(name)
+
+@cli.command()
+@click.argument("repo_url")
+@click.argument("branch")
+def repo_new_version(repo_url,branch):
+    for name in _env.list_envs():
+        env = _env.get_env(name)
+        if branch == env.follow_branch and env.git_repo == repo_url:
+            print(f'apply env {name}')
+            _env.apply(name)
 
 
 if __name__ == '__main__':
