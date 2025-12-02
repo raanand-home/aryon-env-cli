@@ -16,7 +16,7 @@ class EnvsManager():
     def _get_token(self):
         github_token = os.environ.get("ENV_CLI_GITHUB_SECRET")
         if not github_token:
-            raise ValueError("GITHUB_PAT environment variable not set.")
+            raise ValueError("ENV_CLI_GITHUB_SECRET environment variable not set.")
         return github_token
     
     def list_envs(self):
